@@ -3,7 +3,7 @@
 ## The Scenario
 
 Your colleague started working on an application for calculating congestion tax fees for vehicles within the Gothenburg area. Unfortunately, said colleague has gone on parental leave and left the half-finished project to you. While there are no syntax errors in the attached code, there seem to be bugs in the calculation, and there is no entry point to the project, only a class library that currently isn't called from anywhere.
-Looking around your colleagues desk, you find a list of dates scribbled on a post-it. Maybe they'll come in handy.
+Looking around your colleagues' desk, you find a list of dates scribbled on a post-it. Maybe they'll come in handy.
 
 "2013-01-14 21:00:00"
 
@@ -41,11 +41,11 @@ Looking around your colleagues desk, you find a list of dates scribbled on a pos
 
 **We want you to think through and implement the changes and additions required to implement a solution that solves the problem and that you would approve and could stand for.**
 
-- The application currently doesn't have an entry point, add a way to call the calculation with different inputs, preferrably over HTTP.
+- The application currently doesn't have an entry point, add a way to call the calculation with different inputs, preferably over HTTP.
 - As stated there may be bugs in the code, try to find and fix them.
 - There is no particular structure to the code so there are several improvements that can be made.
 
-You may limit the scope to the year 2013 and you are not expected to spend more than 4 hours in total on this assignment. The starting code is provided in Java, C#, Python, Go and TypeScript, pick the language you are most comfortable with. If you want to write your code using a different language, feel free.
+You may limit the scope to the year 2013, and you are not expected to spend more than 4 hours in total on this assignment. The starting code is provided in Java, C#, Python, Go and TypeScript, pick the language you are most comfortable with. If you want to write your code using a different language, feel free.
 
 ## Congestion tax rules in Gothenburg
 
