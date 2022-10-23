@@ -1,7 +1,4 @@
-package congestion.calculator;
-
-import java.util.*;
-import java.text.*;
+package dev.marcosalmeida.congestion.calcucator;
 
 public class Motorbike implements Vehicle {
     @Override
