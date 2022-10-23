@@ -1,11 +1,18 @@
-package dev.marcosalmeida.congestion.calcucator;
+package dev.marcosalmeida.congestion.calcucator.service.impl;
+
+import dev.marcosalmeida.congestion.calcucator.Vehicle;
+import dev.marcosalmeida.congestion.calcucator.service.CongestionTaxCalculatorService;
+import dev.marcosalmeida.congestion.calcucator.web.dto.CongestionRequestDto;
+import dev.marcosalmeida.congestion.calcucator.web.dto.CongestionResponseDto;
+import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CongestionTaxCalculator {
+@Service
+public class CongestionTaxCalculatorImpl implements CongestionTaxCalculatorService {
 
     private static final Map<String, Integer> tollFreeVehicles = new HashMap<>();
 
@@ -87,5 +94,10 @@ public class CongestionTaxCalculator {
                     (month == 12 && (dayOfMonth == 24 || dayOfMonth == 25 || dayOfMonth == 26 || dayOfMonth == 31));
         }
         return false;
+    }
+
+    @Override
+    public CongestionResponseDto calculateTax(CongestionRequestDto congestionRequestDto) {
+        throw new NullPointerException("Mehotd not implemented yet");
     }
 }
