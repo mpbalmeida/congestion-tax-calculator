@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -13,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class TaxResponseDto {
-    private BigDecimal amount;
+    private Integer amount;
+
     private LocalDate date;
 }

@@ -13,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 public class CongestionRequestDto {
-    private VehicleType vehicleType;
+    private String vehicleType;
+
     private Set<LocalDateTime> passes;
 }
