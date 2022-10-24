@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CongestionTaxCalculatorService {
-    int getTaxPerDay(String vehicleType, List<LocalDateTime> dates);
+    int getTaxPerDay(String vehicleType, List<LocalDateTime> dates, String city);
 
     CongestionResponseDto calculateTax(CongestionRequestDto congestionRequestDto);
 }

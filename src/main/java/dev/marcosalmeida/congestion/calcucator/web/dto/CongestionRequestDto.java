@@ -14,6 +14,7 @@ import java.util.Set;
 @Builder
 public class CongestionRequestDto {
     private String vehicleType;
+    private String city;
 
     private Set<LocalDateTime> passes;
 }
