@@ -5,7 +5,6 @@ import dev.marcosalmeida.congestion.calcucator.service.CongestionTaxCalculatorSe
 import dev.marcosalmeida.congestion.calcucator.web.dto.CongestionRequestDto
 import dev.marcosalmeida.congestion.calcucator.web.dto.CongestionResponseDto
 import dev.marcosalmeida.congestion.calcucator.web.dto.TaxResponseDto
-import dev.marcosalmeida.congestion.calcucator.web.dto.VehicleType
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -36,11 +35,11 @@ class CongestionControllerTest extends Specification {
 
     def "CalculateCongestionTax"() {
         given:
-        def request = CongestionRequestDto.builder().vehicleType(VehicleType.MOTORCYCLE).passes(Set.of(LocalDateTime.now())).build()
+        def request = CongestionRequestDto.builder().vehicleType("car").passes(Set.of(LocalDateTime.now())).build()
         def requestString = objectMapper.writeValueAsString(request)
         def expectedResult = CongestionResponseDto.builder()
-                .total(BigDecimal.TEN)
-                .details(Set.of(TaxResponseDto.builder().amount(BigDecimal.ONE).date(LocalDate.now()).build()))
+                .total(Integer.valueOf(100))
+                .details(Set.of(TaxResponseDto.builder().amount(Integer.valueOf(100)).date(LocalDate.now()).build()))
                 .build()
 
         when:

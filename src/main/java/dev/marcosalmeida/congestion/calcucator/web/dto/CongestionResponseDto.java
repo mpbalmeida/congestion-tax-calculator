@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 @Data
@@ -13,6 +12,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 public class CongestionResponseDto {
-    private BigDecimal total;
+    private Integer total;
     private Set<TaxResponseDto> details;
 }
