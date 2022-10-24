@@ -1,41 +1,37 @@
 package dev.marcosalmeida.congestion.calcucator.service.impl;
 
+import dev.marcosalmeida.congestion.calcucator.repository.TollFeeRepository;
+import dev.marcosalmeida.congestion.calcucator.repository.TollFreeVehiclesRepository;
 import dev.marcosalmeida.congestion.calcucator.service.CongestionTaxCalculatorService;
 import dev.marcosalmeida.congestion.calcucator.web.dto.CongestionRequestDto;
 import dev.marcosalmeida.congestion.calcucator.web.dto.CongestionResponseDto;
 import dev.marcosalmeida.congestion.calcucator.web.dto.TaxResponseDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class CongestionTaxCalculatorImpl implements CongestionTaxCalculatorService {
 
-    private static final Map<String, Integer> tollFreeVehicles = new HashMap<>();
+    private final TollFreeVehiclesRepository tollFreeVehiclesRepository;
+    private final TollFeeRepository tollFeeRepository;
 
-    static {
-        tollFreeVehicles.put("motorcycle", 0);
-        tollFreeVehicles.put("tractor", 1);
-        tollFreeVehicles.put("emergency", 2);
-        tollFreeVehicles.put("diplomat", 3);
-        tollFreeVehicles.put("foreign", 4);
-        tollFreeVehicles.put("military", 5);
-
-    }
-
-    public int getTaxPerDay(String vehicleType, List<LocalDateTime> dates) {
+    public int getTaxPerDay(String vehicleType, List<LocalDateTime> dates, String city) {
         LocalDateTime intervalStart = dates.get(0);
         int totalFee = 0;
 
         for (LocalDateTime date : dates) {
-            int nextFee = GetTollFee(date, vehicleType);
-            int tempFee = GetTollFee(intervalStart, vehicleType);
+            int nextFee = GetTollFee(date, vehicleType, city);
+            int tempFee = GetTollFee(intervalStart, vehicleType, city);
 
             long diffInMillies = date.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - intervalStart.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             long minutes = diffInMillies / 1000 / 60;
@@ -53,29 +49,20 @@ public class CongestionTaxCalculatorImpl implements CongestionTaxCalculatorServi
         return totalFee;
     }
 
-    private boolean IsTollFreeVehicle(String vehicleType) {
-        if (vehicleType == null) {
+    private boolean IsTollFreeVehicle(String vehicleType, String city) {
+        if (vehicleType == null || city == null) {
             return false;
         }
-        return tollFreeVehicles.containsKey(vehicleType.toLowerCase());
+        return tollFreeVehiclesRepository.findByCityAndType(vehicleType, city).isPresent();
     }
 
-    public int GetTollFee(LocalDateTime date, String vehicleType) {
-        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicleType)) return 0;
+    public int GetTollFee(LocalDateTime date, String vehicleType, String city) {
+        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicleType, city)) return 0;
 
         int hour = date.get(ChronoField.HOUR_OF_DAY);
         int minute = date.get(ChronoField.MINUTE_OF_HOUR);
 
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if ((hour == 8 && minute >= 30) || (hour >= 9 && hour <= 14)) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-        else return 0;
+        return tollFeeRepository.findFeeByCityAndTime(LocalTime.of(hour, minute), city).orElse(0);
     }
 
     private Boolean IsTollFreeDate(LocalDateTime date) {
@@ -112,7 +99,7 @@ public class CongestionTaxCalculatorImpl implements CongestionTaxCalculatorServi
 
         for (Map.Entry<LocalDate, List<LocalDateTime>> entry : mapByDate.entrySet()) {
             // calculate the tax per day with sorted passes
-            var tax = this.getTaxPerDay(congestionRequestDto.getVehicleType(), entry.getValue().stream().sorted().toList());
+            var tax = this.getTaxPerDay(congestionRequestDto.getVehicleType(), entry.getValue().stream().sorted().toList(), congestionRequestDto.getCity());
             total += tax;
 
             // add details to response list
